@@ -11,11 +11,7 @@ resource "google_container_cluster" "primary" {
 
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
-  private_cluster_config {
-    enable_private_endpoint = false
-    enable_private_nodes = true
-    master_ipv4_cidr_block = "172.16.0.0/28"
-  }
+
 }
 
 # Separately Managed Node Pool
