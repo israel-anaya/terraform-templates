@@ -14,7 +14,7 @@ resource "google_container_cluster" "primary" {
   private_cluster_config {
     enable_private_endpoint = false
     enable_private_nodes = true
-    master-ipv4-cidr = 172.16.0.0/28
+    master-ipv4-cidr = "172.16.0.0/28"
   }
 }
 
