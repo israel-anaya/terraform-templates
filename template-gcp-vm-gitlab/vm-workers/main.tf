@@ -46,7 +46,7 @@ data "template_file" "shared_runner" {
 }
 
 data "template_file" "startup_script" {
-  template = file("${path.module}/startup_script.sh")
+  template = file("${path.module}/startup-script.sh")
 
   vars = {
     PROXY_SQL     = data.template_file.proxy_sql.rendered

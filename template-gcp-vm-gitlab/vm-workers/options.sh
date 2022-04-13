@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 CONTAINER_NAME="proxy-sql"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 export SQL_CLOUD_INSTANCE=${connection_name}
 CONTAINER_NAME="proxy-sql"
 

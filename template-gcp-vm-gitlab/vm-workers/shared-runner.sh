@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 RUNNER_BASE_NAME="shared-gitlab-runner"
 
 validateRunnerName() {

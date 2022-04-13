@@ -56,7 +56,7 @@ data "template_file" "shared_sonarqube" {
 }
 
 data "template_file" "startup_script" {
-  template = file("${path.module}/startup_script.sh")
+  template = file("${path.module}/startup-script.sh")
 
   vars = {
     SHARED_SONARQUBE = data.template_file.shared_sonarqube.rendered

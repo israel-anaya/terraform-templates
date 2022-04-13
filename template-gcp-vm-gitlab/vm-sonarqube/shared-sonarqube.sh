@@ -1,4 +1,5 @@
-#!/bin/sh
+#! /bin/sh
+
 CONTAINER_NAME="shared-sonarqube"
 DATABASE_HOST="cehd-workers"
 DATABASE_PORT_NUMBER="5432"
