@@ -1,0 +1,39 @@
+domainInfo:
+  AdminUserName: '@@PROP:AdminUserName@@'
+  AdminPassword: '@@PROP:AdminPassword@@'
+topology:
+  Name: '@@PROP:CUSTOM_DOMAIN_NAME@@'
+  AdminServerName: '@@PROP:ADMIN_NAME@@'
+  SecurityConfiguration:
+    NodeManagerUsername : '@@PROP:AdminUserName@@'
+    NodeManagerPasswordEncrypted : '@@PROP:AdminPassword@@'
+  ProductionModeEnabled: '@@PROP:PRODUCTION_MODE_ENABLED@@'
+  Log:
+    FileName: '@@PROP:CUSTOM_DOMAIN_NAME@@.log'
+  Cluster:
+    '@@PROP:CLUSTER_NAME@@':
+      MulticastPort: 5555
+      MulticastAddress: 237.0.0.101
+      WeblogicPluginEnabled: true
+      ClusterMessagingMode: multicast
+  UnixMachine:
+    '@@PROP:MACHINE_NAME@@':
+      NodeManager:
+        DebugEnabled: true
+        NMType: Plain
+  Server:
+    '@@PROP:ADMIN_NAME@@':
+      Machine: '@@PROP:MACHINE_NAME@@'
+      ListenPort: '@@PROP:ADMIN_PORT@@'
+    server_0:
+      ListenPort: 7003
+      Machine: '@@PROP:MACHINE_NAME@@'
+      Cluster: '@@PROP:CLUSTER_NAME@@'
+      ServerStart:
+        Arguments: '-Xms=1024m -Xmx=1024'
+    server_1:
+      ListenPort: 7004
+      Machine: '@@PROP:MACHINE_NAME@@'
+      Cluster: '@@PROP:CLUSTER_NAME@@'
+      ServerStart:
+        Arguments: '-Xms=1024m -Xmx=1024'

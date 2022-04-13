@@ -1,0 +1,64 @@
+domainInfo:
+    AdminUserName: cibanco
+    AdminPassword: Admin0511
+    ServerStartMode: 'prod'
+topology:
+    Name: '@@PROP:CUSTOM_DOMAIN_NAME@@'
+    AdminServerName: '@@PROP:ADMIN_NAME@@'
+    ProductionModeEnabled: '@@PROP:PRODUCTION_MODE_ENABLED@@'
+    Log:
+        FileName: '@@PROP:CUSTOM_DOMAIN_NAME@@.log'
+    Cluster:
+        '@@PROP:CLUSTER_NAME@@':
+            DynamicServers:
+                ServerTemplate: '@@PROP:CLUSTER_NAME@@-template'
+                ServerNamePrefix: '@@PROP:MANAGED_SERVER_NAME_BASE@@'
+                DynamicClusterSize: '@@PROP:CLUSTER_SIZE@@'
+                MaxDynamicClusterSize: '@@PROP:CLUSTER_SIZE@@'
+                MinDynamicClusterSize: '0'
+                CalculatedListenPorts: false
+    Server:
+        '@@PROP:ADMIN_NAME@@':
+            ListenPort: '@@PROP:ADMIN_PORT@@'
+    ServerTemplate:
+        '@@PROP:CLUSTER_NAME@@-template':
+            Cluster: '@@PROP:CLUSTER_NAME@@'
+            ListenPort: '@@PROP:MANAGED_SERVER_PORT@@'
+resources:
+    SelfTuning:
+        MinThreadsConstraint:
+            SampleMinThreads:
+                Target: '@@PROP:CLUSTER_NAME@@'
+                Count: 1
+        MaxThreadsConstraint:
+            SampleMaxThreads:
+                Target: '@@PROP:CLUSTER_NAME@@'
+                Count: 10
+        WorkManager:
+            SampleWM:
+                Target: '@@PROP:CLUSTER_NAME@@'
+                MinThreadsConstraint: 'SampleMinThreads'
+                MaxThreadsConstraint: 'SampleMaxThreads'
+    JDBCSystemResource:
+    JMSServer:
+        LoginLogoutJMSServer:
+            Target: '@@PROP:ADMIN_NAME@@'
+    JMSSystemResource:
+        LoginLogoutModule:
+            Target: '@@PROP:CLUSTER_NAME@@'
+            SubDeployment:
+                LoginLogoutSubdeployment:
+                    Target: LoginLogoutJMSServer
+            JmsResource:
+                ConnectionFactory:
+                    LoginLogoutConnectionFactory:
+                        JNDIName: jms/LoginLogoutConnectionFactory
+                        DefaultTargetingEnabled: true
+                        ClientParams:
+                            MessagesMaximum: 10
+                        TransactionParams:
+                            XAConnectionFactoryEnabled: true
+                Queue:
+                    LoginLogoutQueue:
+                        SubDeploymentName: LoginLogoutSubdeployment
+                        JNDIName: jms/LoginLogoutForeignQueue

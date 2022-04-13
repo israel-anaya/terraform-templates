@@ -1,0 +1,13 @@
+[ENGINE]
+#DO NOT CHANGE THIS.
+Response File Version=1.0.0.0.0
+[GENERIC]
+#Set this to true if you wish to skip software updates
+DECLINE_AUTO_UPDATES=true
+
+#The oracle home location. This can be an existing Oracle Home or a new Oracle Home
+ORACLE_HOME=/home/oracle/middleware
+ 
+#Set this variable value to the Installation Type selected. 
+#e.g WebLogic Server, Coherence, Complete with Examples
+INSTALL_TYPE=WebLogic Server
