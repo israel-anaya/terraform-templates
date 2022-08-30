@@ -1,15 +1,15 @@
 locals {
-  hostname = format("%s-weblogic", var.environment)
+  hostname = format("%s-wildfly", var.environment)
 }
 
 resource "google_compute_address" "external_ip" {
-  name         = format("%s-weblogic-ip", var.environment)
+  name         = format("%s-wildfly-ip", var.environment)
   address_type = "EXTERNAL"
   network_tier = "STANDARD"
 }
 
 resource "google_compute_firewall" "http" {
-  name          = format("%s-weblogic-http", var.environment)
+  name          = format("%s-wildfly-http", var.environment)
   network       = var.network.name
   project       = var.project_id
   source_ranges = ["0.0.0.0/0"]
@@ -17,12 +17,12 @@ resource "google_compute_firewall" "http" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    ports    = ["8080"]
   }
 }
 
 resource "google_compute_firewall" "https" {
-  name          = format("%s-weblogic-https", var.environment)
+  name          = format("%s-wildfly-https", var.environment)
   network       = var.network.name
   project       = var.project_id
   source_ranges = ["0.0.0.0/0"]
@@ -35,7 +35,7 @@ resource "google_compute_firewall" "https" {
 }
 
 resource "google_compute_firewall" "console" {
-  name          = format("%s-weblogic-console", var.environment)
+  name          = format("%s-wildfly-console", var.environment)
   network       = var.network.name
   project       = var.project_id
   source_ranges = ["0.0.0.0/0"]
@@ -43,13 +43,13 @@ resource "google_compute_firewall" "console" {
 
   allow {
     protocol = "tcp"
-    ports    = ["7001"]
+    ports    = ["9990"]
   }
 }
 
 
 resource "google_compute_firewall" "ssh" {
-  name        = format("%s-weblogic-ssh", var.environment)
+  name        = format("%s-wildfly-ssh", var.environment)
   network     = var.network.name
   direction   = "INGRESS"
   project     = var.project_id
@@ -66,25 +66,22 @@ data "template_file" "bash_profile" {
   template = file("${path.module}/files/.bash_profile")
 }
 
-data "template_file" "ora_response" {
-  template = file("${path.module}/files/ora-response")
+data "template_file" "wildfly_config" {
+  template = file("${path.module}/files/wildfly.conf")
 }
 
-data "template_file" "install_weblogic" {
-  template = file("${path.module}/files/install-weblogic.sh")
+data "template_file" "wildfly_install" {
+  template = file("${path.module}/files/install-wildfly.sh")
 }
 
-data "template_file" "create_domain" {
-  template = file("${path.module}/files/create-domain.sh")
+data "template_file" "wildfly_launch" {
+  template = file("${path.module}/files/launch.sh")
 }
 
-data "template_file" "domain_model" {
-  template = file("${path.module}/files/domain-model.yaml")
+data "template_file" "wildfly_service" {
+  template = file("${path.module}/files/wildfly.service")
 }
 
-data "template_file" "domain_properties" {
-  template = file("${path.module}/files/domain.properties")
-}
 
 // The user-data script on Bastion instance provisioning.
 data "template_file" "startup_script" {
@@ -92,11 +89,10 @@ data "template_file" "startup_script" {
   template = file("${path.module}/files/startup-script.sh")
   vars = {
     BASH_PROFILE = data.template_file.bash_profile.rendered
-    ORA_RESPONSE = data.template_file.ora_response.rendered
-    INSTALL_WEBLOGIC = data.template_file.install_weblogic.rendered
-    CREATE_DOMAIN = data.template_file.create_domain.rendered
-    DOMAIN_MODEL = data.template_file.domain_model.rendered
-    DOMAIN_PROPERTIES = data.template_file.domain_properties.rendered
+    WILDFLY_CONFIG = data.template_file.wildfly_config.rendered
+    WILDFLY_INSTALL = data.template_file.wildfly_install.rendered
+    WILDFLY_LAUNCH = data.template_file.wildfly_launch.rendered
+    WILDFLY_SERVICE = data.template_file.wildfly_service.rendered
   }
 }
 

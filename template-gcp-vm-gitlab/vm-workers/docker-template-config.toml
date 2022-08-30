@@ -1,0 +1,18 @@
+[[runners]]
+  executor = "docker"
+  builds_dir = "/builds"
+  cache_dir = "/cache"
+  [runners.custom_build_dir]
+    enabled = true
+  [runners.cache]
+    Type = ""
+    Shared = false 
+  [runners.docker]
+    tls_verify = false
+    image = "docker:latest"
+    privileged = false
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/builds:/builds", "/cache:/cache"]
+    shm_size = 0

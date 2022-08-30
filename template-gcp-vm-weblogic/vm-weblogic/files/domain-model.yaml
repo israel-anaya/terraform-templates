@@ -1,6 +1,7 @@
 domainInfo:
   AdminUserName: '@@PROP:AdminUserName@@'
   AdminPassword: '@@PROP:AdminPassword@@'
+  ServerStartMode: '@@PROP:SERVER_START_MODE@@'
 topology:
   Name: '@@PROP:CUSTOM_DOMAIN_NAME@@'
   AdminServerName: '@@PROP:ADMIN_NAME@@'

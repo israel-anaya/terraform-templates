@@ -1,27 +1,19 @@
+
 #! /bin/sh
-RUNNER_BASE_NAME="shared-gitlab-runner"
+
 REGISTRATION_TOKEN="qTxnRSCCbhX6KwopzvYJ"
 
-validateRunnerName() {
-    if [ -z $1 ] ; then
-        echo "Define runner name!"
-        return 1 # Fail
-    fi
-
-    nodigits="$(echo $1 | sed 's/[[:digit:]]//g')"
-    if [ ! -z $nodigits ] ; then
-        echo "Invalid runner name! Only digits, no commas, spaces, etc."
-        return 1 # Fail
-    fi
-    return 0 # Success
-}
-
-createSharedRunner() {   
+startSharedCache() {   
     if ( validateRunnerName "$1" )
     then
-        RUNNER_NAME="$RUNNER_BASE_NAME-$1"
 
         echo "Creating $RUNNER_NAME..."
+        docker run -itd --name minio --restart always \
+            -p 9005:9000 \
+            -v D:\minio:/root/.minio \
+            -v D:\minio\export:/export \             
+            minio/minio:latest server /export
+        
         docker volume create $RUNNER_NAME
 
         docker run -d --name $RUNNER_NAME --restart always \
@@ -31,7 +23,7 @@ createSharedRunner() {
     fi
 }
 
-stopSharedRunner() {
+stopSharedCache() {
     if ( validateRunnerName "$1" )
     then
         RUNNER_NAME="$RUNNER_BASE_NAME-$1"
@@ -41,7 +33,7 @@ stopSharedRunner() {
     fi
 }
 
-restartSharedRunner() {
+restartSharedCache() {
     if ( validateRunnerName "$1" )
     then
         RUNNER_NAME="$RUNNER_BASE_NAME-$1"
@@ -51,7 +43,7 @@ restartSharedRunner() {
     fi
 }
 
-deleteSharedRunner() {
+deleteSharedCache() {
     if ( validateRunnerName "$1" )
     then
         RUNNER_NAME="$RUNNER_BASE_NAME-$1"
@@ -70,44 +62,6 @@ viewLogs() {
         RUNNER_NAME="$RUNNER_BASE_NAME-$1"
    
         docker logs -f $RUNNER_NAME
-    fi
-}
-
-registerSharedRunner() {
-    if ( validateRunnerName "$1" )
-    then
-        RUNNER_NAME="$RUNNER_BASE_NAME-$1"
-
-        echo "Registring $RUNNER_NAME..."
-        docker run --rm -it \
-            -v $RUNNER_NAME:/etc/gitlab-runner \
-            -v /home/workers/docker-template-config.toml:/tmp/docker-template-config.toml:ro \
-            gitlab/gitlab-runner:latest register \
-            --template-config /tmp/docker-template-config.toml \
-            --non-interactive \
-            --url "https://gitlab.cehd.devopsat.dev/" \
-            --registration-token $REGISTRATION_TOKEN \
-            --name $RUNNER_NAME
-
-
-    fi
-}
-
-editSharedRunner() {   
-    if ( validateRunnerName "$1" )
-    then
-        RUNNER_NAME="$RUNNER_BASE_NAME-$1"
-
-        echo "Exec $RUNNER_NAME..."
-        sudo docker run -it --rm  \
-            -v shared-gitlab-runner-00:/etc/gitlab-runner \
-            -v /home/workers/docker-template-config.toml:/tmp/docker-template-config.toml:ro \
-            ubuntu:latest bash
-        
-        sudo docker run -it --rm  \
-            -v shared-gitlab-runner-00:/etc/gitlab-runner \
-            ubuntu:latest bash
-
     fi
 }
 
@@ -150,3 +104,4 @@ main() {
 
 # call main function
 main $1 $2
+
