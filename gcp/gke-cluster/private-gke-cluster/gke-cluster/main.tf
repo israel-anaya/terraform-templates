@@ -1,7 +1,7 @@
 // Create the GKE service account
 resource "google_service_account" "gke" {
   account_id   = format("%s-node-sa", var.cluster_name)
-  display_name = "GKE Security Service Account"
+  display_name = format("%s Security Service Account", var.cluster_name)
   project      = var.project_id
 }
 
@@ -148,7 +148,7 @@ resource "google_container_node_pool" "primary_linux_node_pool" {
       "primary-node-pool" = true
     }
 
-    tags = ["gke-node", "${var.cluster_name}"]
+    tags = ["${var.cluster_name}-node"]
 
   }
 
@@ -157,3 +157,6 @@ resource "google_container_node_pool" "primary_linux_node_pool" {
     max_unavailable = 1
   }
 }
+
+
+#

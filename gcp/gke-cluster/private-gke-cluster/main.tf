@@ -1,5 +1,5 @@
 locals {
-  cluster_name = "${var.environment}-gke"
+  cluster_name = "${var.instance_name}-gke"
 }
 
 provider "google" {
@@ -23,7 +23,7 @@ module "gke_networks" {
 }
 
 module "gke_cluster" {
-  source = "./gke_cluster"
+  source = "./gke-cluster"
 
   project_id   = var.project_id
   region       = var.region
@@ -50,5 +50,15 @@ module "bastion" {
   cluster_name = local.cluster_name
   network_name = module.gke_networks.network.name
   subnetwork_name  = module.gke_networks.subnetwork.name
+}
 
+module "admin" {
+  source = "./vm-admin"
+
+  project_id   = var.project_id
+  region       = var.region
+  zone         = var.main_zone
+  cluster_name = local.cluster_name
+  network_name = module.gke_networks.network.name
+  subnetwork_name  = module.gke_networks.subnetwork.name
 }

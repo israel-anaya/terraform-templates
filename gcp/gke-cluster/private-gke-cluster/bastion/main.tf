@@ -5,7 +5,7 @@ locals {
 // Dedicated service account for the Bastion instance.
 resource "google_service_account" "bastion" {
   account_id   = format("%s-bastion-sa", var.cluster_name)
-  display_name = "GKE Bastion Service Account"
+  display_name = format("%s Bastion Service Account", var.cluster_name)
 }
 
 // Allow access to the Bastion Host via SSH.
@@ -22,8 +22,6 @@ resource "google_compute_firewall" "bastion-ssh" {
   }
 
   target_tags = ["gke-cluster", "${var.cluster_name}"]
-
-  #target_tags = ["bastion"]
 }
 
 // The user-data script on Bastion instance provisioning.

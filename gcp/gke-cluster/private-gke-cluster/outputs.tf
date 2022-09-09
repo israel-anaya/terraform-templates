@@ -8,11 +8,6 @@ output "kubectl_alias_command" {
   value       = module.bastion.kubectl_command
 }
 
-output "cluster_environment" {
-  value       = var.environment
-  description = "Environment"
-}
-
 output "cluster_project_id" {
   value       = var.project_id
   description = "GCloud Project ID"

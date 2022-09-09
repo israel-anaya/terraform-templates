@@ -1,5 +1,6 @@
-variable "environment" {
-  description = "Environment name"
+variable "instance_name" {
+  type        = string
+  description = "Cluster instance name"
 }
 
 variable "project_id" {
