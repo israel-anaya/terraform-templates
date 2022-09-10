@@ -20,23 +20,24 @@
 
 variable "apigee_name" {
   description = "Apigee Core Name"
-  type        = string  
+  type        = string
 }
 
 variable "project_id" {
-  description = "Project id (also used for the Apigee Organization)."
   type        = string
+  description = "The ID of the project to create resources (also used for the Apigee Organization) in"
 }
 
-variable "ax_region" {
-  description = "GCP region for storing Apigee analytics data (see https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli)."
+variable "region" {
   type        = string
+  description = "The region to use."
+  # "GCP region for storing Apigee analytics data (see https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli)."
 }
 
-# variable "network" {
-#   description = "Network (self-link) to peer with the Apigee tennant project."
-#   type        = string
-# }
+variable "main_zone" {
+  type        = string
+  description = "The zone primary to use."
+}
 
 variable "billing_type" {
   description = "Billing type of the Apigee organization."
@@ -84,5 +85,10 @@ variable "instance_key_rotation_period" {
 
 variable "apigee_org_kms_keyring_name" {
   description = "Name of the KMS Key Ring for Apigee Organization DB."
+  type        = string
+}
+
+variable "peer_network" {
+  description = "Resource link of the peer network."
   type        = string
 }

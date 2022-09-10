@@ -91,11 +91,11 @@ data "template_file" "startup_script" {
 
   template = file("${path.module}/files/startup-script.sh")
   vars = {
-    BASH_PROFILE = data.template_file.bash_profile.rendered
-    ORA_RESPONSE = data.template_file.ora_response.rendered
-    INSTALL_WEBLOGIC = data.template_file.install_weblogic.rendered
-    CREATE_DOMAIN = data.template_file.create_domain.rendered
-    DOMAIN_MODEL = data.template_file.domain_model.rendered
+    BASH_PROFILE      = data.template_file.bash_profile.rendered
+    ORA_RESPONSE      = data.template_file.ora_response.rendered
+    INSTALL_WEBLOGIC  = data.template_file.install_weblogic.rendered
+    CREATE_DOMAIN     = data.template_file.create_domain.rendered
+    DOMAIN_MODEL      = data.template_file.domain_model.rendered
     DOMAIN_PROPERTIES = data.template_file.domain_properties.rendered
   }
 }
@@ -116,7 +116,7 @@ resource "google_compute_instance" "instance" {
 
   boot_disk {
     initialize_params {
-      size  = 60
+      size = 60
       #type  = "pd-ssd"
       image = "debian-cloud/debian-10"
     }

@@ -16,6 +16,6 @@ variable "node_count" {
 }
 
 variable "machine_type" {
-  default = "e2-micro"
+  default     = "e2-micro"
   description = "Machine type"
 }

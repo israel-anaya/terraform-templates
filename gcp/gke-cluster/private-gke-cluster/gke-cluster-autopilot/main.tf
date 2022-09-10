@@ -1,26 +1,3 @@
-// Create the GKE service account
-resource "google_service_account" "gke" {
-  account_id   = format("%s-node-sa", var.cluster_name)
-  display_name = format("%s Security Service Account", upper(var.cluster_name))
-  project      = var.project_id
-}
-
-// Add the service account to the project
-resource "google_project_iam_member" "service-account" {
-  count   = length(var.service_account_iam_roles)
-  project = var.project_id
-  role    = element(var.service_account_iam_roles, count.index)
-  member  = format("serviceAccount:%s", google_service_account.gke.email)
-}
-
-// Add user-specified roles
-resource "google_project_iam_member" "service-account-custom" {
-  count   = length(var.service_account_custom_iam_roles)
-  project = var.project_id
-  role    = element(var.service_account_custom_iam_roles, count.index)
-  member  = format("serviceAccount:%s", google_service_account.gke.email)
-}
-
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
@@ -28,8 +5,9 @@ resource "google_container_cluster" "primary" {
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
-  remove_default_node_pool = true
-  initial_node_count       = 1
+
+  # remove_default_node_pool = true
+  initial_node_count = 1
 
   network    = var.network.name
   subnetwork = var.subnetwork.name
@@ -70,43 +48,11 @@ resource "google_container_cluster" "primary" {
     channel = "STABLE"
   }
 
-  addons_config {
-    // Enable network policy (Calico)
-    network_policy_config {
-      disabled = false
-    }
-  }
-
-  /* Enable network policy configurations (like Calico).
-  For some reason this has to be in here twice. */
-  network_policy {
-    enabled = "true"
-  }
-
-  workload_identity_config {
-    workload_pool = format("%s.svc.id.goog", var.project_id)
-  }
-}
-
-resource "google_container_node_pool" "primary_linux_node_pool" {
-  name     = "primary-np"
-  cluster  = google_container_cluster.primary.name
-  project  = var.project_id
-  location = var.region
-  #node_locations = var.node_zones
-  node_count = var.node_count
-
-  #autoscaling {
-  #  max_node_count = var.node_count
-  #  min_node_count = var.node_count
+  #workload_identity_config {
+  #  workload_pool = format("%s.svc.id.goog", var.project_id)
   #}
 
-  max_pods_per_node = 100
-
-  management {
-    auto_repair  = true
-    auto_upgrade = true
-  }
+  enable_autopilot = true
 
   node_config {
     preemptible  = true
@@ -143,16 +89,10 @@ resource "google_container_node_pool" "primary_linux_node_pool" {
     }
 
     labels = {
-      "cluster-name"      = var.cluster_name
-      "primary-node-pool" = true
+      "cluster-name" = var.cluster_name
     }
 
     tags = ["${var.cluster_name}-node"]
-
-  }
-
-  upgrade_settings {
-    max_surge       = 1
-    max_unavailable = 1
   }
 }
+

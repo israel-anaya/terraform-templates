@@ -1,20 +1,20 @@
-variable "cluster_name" {
-  description = "Kubernetes cluster name"
+variable "prefix_name" {
+  description = "Prefix name for the instance."
 }
 
 variable "project_id" {
   type        = string
-  description = "The project ID to host the network in."
+  description = "The project ID that should be used."
 }
 
 variable "region" {
   type        = string
-  description = "The region to use"
+  description = "The region that should be used."
 }
 
 variable "zone" {
   type        = string
-  description = "The zone where the Bastion host is located in."
+  description = "The zone where the Admin host is located in."
 }
 
 variable "network_name" {

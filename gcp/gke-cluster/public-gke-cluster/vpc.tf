@@ -15,6 +15,6 @@ resource "google_compute_subnetwork" "subnet" {
 
 # External IP for Main LoadBalancer
 resource "google_compute_address" "ingress_ip" {
-  name = "${local.cluster_name}-ip"
-  region        = var.region
+  name   = "${local.cluster_name}-ip"
+  region = var.region
 }

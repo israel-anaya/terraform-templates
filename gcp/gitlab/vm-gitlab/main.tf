@@ -21,14 +21,14 @@ module "networks" {
 }
 
 module "database_service" {
-  source          = "./database-service"
-  project_id      = var.project_id
-  region          = var.region
-  environment     = var.environment
-  network         = module.networks.network
-  subnetwork      = module.networks.subnetwork
-  tier            = var.database_tier
-  depends_on      = [module.sa, module.networks]
+  source      = "./database-service"
+  project_id  = var.project_id
+  region      = var.region
+  environment = var.environment
+  network     = module.networks.network
+  subnetwork  = module.networks.subnetwork
+  tier        = var.database_tier
+  depends_on  = [module.sa, module.networks]
 }
 
 module "vm_bastion" {

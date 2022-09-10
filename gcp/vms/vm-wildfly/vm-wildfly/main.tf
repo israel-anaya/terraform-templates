@@ -88,10 +88,10 @@ data "template_file" "startup_script" {
 
   template = file("${path.module}/files/startup-script.sh")
   vars = {
-    BASH_PROFILE = data.template_file.bash_profile.rendered
-    WILDFLY_CONFIG = data.template_file.wildfly_config.rendered
+    BASH_PROFILE    = data.template_file.bash_profile.rendered
+    WILDFLY_CONFIG  = data.template_file.wildfly_config.rendered
     WILDFLY_INSTALL = data.template_file.wildfly_install.rendered
-    WILDFLY_LAUNCH = data.template_file.wildfly_launch.rendered
+    WILDFLY_LAUNCH  = data.template_file.wildfly_launch.rendered
     WILDFLY_SERVICE = data.template_file.wildfly_service.rendered
   }
 }
@@ -112,7 +112,7 @@ resource "google_compute_instance" "instance" {
 
   boot_disk {
     initialize_params {
-      size  = 60
+      size = 60
       #type  = "pd-ssd"
       image = "debian-cloud/debian-10"
     }

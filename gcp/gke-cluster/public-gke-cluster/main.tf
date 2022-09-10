@@ -1,5 +1,5 @@
-locals  {
-  cluster_name = "${var.project_id}-${var.environment}-gke" 
+locals {
+  cluster_name = "${var.project_id}-${var.environment}-gke"
 }
 
 provider "google" {

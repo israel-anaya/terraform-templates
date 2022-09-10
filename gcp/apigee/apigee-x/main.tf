@@ -60,25 +60,37 @@ resource "google_project_service_identity" "apigee_sa" {
 # }
 
 module "apigee_networks" {
-  source = "./networks"
+  source       = "./networks"
   project_id   = var.project_id
-  region       = var.ax_region
-  apigee_name = local.apigee_name
+  region       = var.region
+  apigee_name  = local.apigee_name
+  peer_network = var.peer_network
 
 }
 
+module "admin" {
+  source = "../../vms/vm-admin"
+
+  project_id      = var.project_id
+  region          = var.region
+  zone            = var.main_zone
+  prefix_name     = local.apigee_name
+  network_name    = module.apigee_networks.network.name
+  subnetwork_name = module.apigee_networks.subnetwork.name
+}
+
 module "apigee_organization" {
-  source                  = "./organization"
-  project_id              = var.project_id
-  analytics_region        = var.ax_region
-  runtime_type            = "CLOUD"
-  billing_type            = var.billing_type
-  authorized_network      = module.apigee_networks.network
+  source             = "./organization"
+  project_id         = var.project_id
+  analytics_region   = var.region
+  runtime_type       = "CLOUD"
+  billing_type       = var.billing_type
+  authorized_network = module.apigee_networks.network
   #database_encryption_key = module.kms-org-db.key_ids["org-db"]
-  apigee_environments     = var.apigee_environments
-  apigee_envgroups        = var.apigee_envgroups
+  apigee_environments = var.apigee_environments
+  apigee_envgroups    = var.apigee_envgroups
   depends_on = [
-    google_project_service_identity.apigee_sa#,
+    google_project_service_identity.apigee_sa #,
     #module.kms-org-db.id
   ]
 }

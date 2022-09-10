@@ -1,9 +1,9 @@
 
 // Create a network for GKE
 resource "google_compute_network" "vpc" {
-  project                         = var.project_id
-  name                            = format("%s-vpc", var.cluster_name)
-  auto_create_subnetworks         = false
+  project                 = var.project_id
+  name                    = format("%s-vpc", var.cluster_name)
+  auto_create_subnetworks = false
 }
 
 
@@ -13,18 +13,18 @@ resource "google_compute_subnetwork" "subnetwork" {
   network       = google_compute_network.vpc.name
   project       = var.project_id
   region        = var.region
-  ip_cidr_range = "10.0.0.0/24"
+  ip_cidr_range = "10.200.0.0/24"
 
   private_ip_google_access = true
 
   secondary_ip_range {
     range_name    = format("%s-pod-range", var.cluster_name)
-    ip_cidr_range = "10.1.0.0/16"
+    ip_cidr_range = "10.203.0.0/16"
   }
 
   secondary_ip_range {
     range_name    = format("%s-svc-range", var.cluster_name)
-    ip_cidr_range = "10.2.0.0/20"
+    ip_cidr_range = "10.204.0.0/20"
   }
 }
 
@@ -70,11 +70,4 @@ resource "google_compute_router_nat" "nat" {
       google_compute_subnetwork.subnetwork.secondary_ip_range.1.range_name,
     ]
   }
-}
-
-# External IP for Main LoadBalancer
-resource "google_compute_address" "ingress_ip" {
-  name    = "${var.cluster_name}-ingress-ip"
-  project = var.project_id
-  region  = var.region
 }

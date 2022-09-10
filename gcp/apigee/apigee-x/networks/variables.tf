@@ -11,3 +11,8 @@ variable "region" {
   type        = string
   description = "The region to use"
 }
+
+variable "peer_network" {
+  description = "Resource link of the peer network."
+  type        = string
+}

@@ -5,7 +5,7 @@ locals {
 // Dedicated service account for the Bastion instance.
 resource "google_service_account" "bastion" {
   account_id   = format("%s-bastion-sa", var.cluster_name)
-  display_name = format("%s Bastion Service Account", var.cluster_name)
+  display_name = format("%s Bastion Service Account", upper(var.cluster_name))
 }
 
 // Allow access to the Bastion Host via SSH.
@@ -35,12 +35,12 @@ data "template_file" "startup_script" {
 // The Bastion host.
 resource "google_compute_instance" "bastion" {
   name         = local.hostname
-  machine_type = "e2-micro"
-  zone         = var.zone
   project      = var.project_id
+  zone         = var.zone
+  machine_type = "e2-micro"
 
   labels = {
-    "cluster-name" = var.cluster_name
+    "gke-cluster" = var.cluster_name
   }
 
   tags = ["gke-cluster", "${var.cluster_name}"]

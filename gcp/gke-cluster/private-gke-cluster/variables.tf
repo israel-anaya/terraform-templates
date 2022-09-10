@@ -32,7 +32,7 @@ variable "node_count" {
   type        = number
   description = "Nodes by zone"
 }
-#variable "service_account" {
-#  type = string
-#  description = "The GCP service account"
-#}
+
+variable "enable_autopilot" {
+  type = bool
+}

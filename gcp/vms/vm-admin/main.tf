@@ -1,16 +1,16 @@
 locals {
-  hostname = format("%s-admin", var.cluster_name)
+  hostname = format("%s-admin", var.prefix_name)
 }
 
 // Dedicated service account for the Bastion instance.
 resource "google_service_account" "admin" {
-  account_id   = format("%s-admin-sa", var.cluster_name)
-  display_name = format("%s Admin Service Account", var.cluster_name)
+  account_id   = format("%s-admin-sa", var.prefix_name)
+  display_name = format("%s Admin Service Account", upper(var.prefix_name))
 }
 
-// Allow access to the Bastion Host via SSH.
-resource "google_compute_firewall" "admin-ssh" {
-  name          = format("%s-admin-ssh", var.cluster_name)
+// Allow access to the Admin Host via RDP.
+resource "google_compute_firewall" "admin-rdp" {
+  name          = format("%s-admin-rdp", var.prefix_name)
   network       = var.network_name
   direction     = "INGRESS"
   project       = var.project_id
@@ -21,10 +21,10 @@ resource "google_compute_firewall" "admin-ssh" {
     ports    = ["3389"]
   }
 
-  target_tags = ["gke-cluster-admin", "${var.cluster_name}"]
+  target_tags = [local.hostname]
 }
 
-// The user-data script on Bastion instance provisioning.
+// The user-data script on Admin instance provisioning.
 data "template_file" "startup_script" {
   template = <<-EOF
   sudo apt-get update -y
@@ -32,18 +32,18 @@ data "template_file" "startup_script" {
   EOF
 }
 
-// The Bastion host.
+// The Admin host.
 resource "google_compute_instance" "admin" {
   name         = local.hostname
   machine_type = "e2-medium"
-  zone         = var.zone
-  project      = var.project_id
+  #zone         = var.zone
+  project = var.project_id
 
   labels = {
-    "cluster-name" = var.cluster_name
+    "hostname" = local.hostname
   }
 
-  tags = ["gke-cluster-admin", "${var.cluster_name}"]
+  tags = [local.hostname]
 
   boot_disk {
     initialize_params {
@@ -64,10 +64,8 @@ resource "google_compute_instance" "admin" {
     network    = var.network_name
     subnetwork = var.subnetwork_name
 
-
     access_config {
       // Not setting "nat_ip", use an ephemeral external IP.
-      #network_tier = "STANDARD"
     }
   }
 
@@ -82,5 +80,33 @@ resource "google_compute_instance" "admin" {
   scheduling {
     preemptible       = true
     automatic_restart = false
+  }
+}
+
+
+# Solo para pruebas del apigee a la red interna
+resource "google_compute_firewall" "http" {
+  name          = format("%s-admin-http", var.prefix_name)
+  network       = var.network_name
+  project       = var.project_id
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["http-server", local.hostname]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8080"]
+  }
+}
+
+resource "google_compute_firewall" "https" {
+  name          = format("%s-admin-https", var.prefix_name)
+  network       = var.network_name
+  project       = var.project_id
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["https-server", local.hostname]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
   }
 }
