@@ -36,7 +36,7 @@ data "template_file" "startup_script" {
 resource "google_compute_instance" "admin" {
   name         = local.hostname
   machine_type = "e2-medium"
-  #zone         = var.zone
+  zone         = var.zone
   project = var.project_id
 
   labels = {

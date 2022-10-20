@@ -1,8 +1,8 @@
 locals {
   psa_config = {
     ranges = {
-      range         = "10.0.0.0/22"
-      support-range = "10.1.0.0/28"
+      range         = "10.101.0.0/22"
+      support-range = "10.102.0.0/28"
     }
     routes = {
       export = true
@@ -51,14 +51,14 @@ resource "google_service_networking_connection" "apigee_vpc_connection" {
   ]
 }
 
-resource "google_compute_network_peering_routes_config" "psa_routes" {
-  for_each             = local.psa_config == null ? {} : { 1 = 1 }
-  project              = var.project_id
-  peering              = google_service_networking_connection.apigee_vpc_connection["1"].peering
-  network              = google_compute_network.vpc.id
-  export_custom_routes = try(local.psa_config.routes.export, false)
-  import_custom_routes = try(local.psa_config.routes.import, false)
-}
+# resource "google_compute_network_peering_routes_config" "psa_routes" {
+#   for_each             = local.psa_config == null ? {} : { 1 = 1 }
+#   project              = var.project_id
+#   peering              = google_service_networking_connection.apigee_vpc_connection["1"].peering
+#   network              = google_compute_network.vpc.id
+#   export_custom_routes = try(local.psa_config.routes.export, false)
+#   import_custom_routes = try(local.psa_config.routes.import, false)
+# }
 
 module "peering_apigee_gke" {
   source = "./peering"

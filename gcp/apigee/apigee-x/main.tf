@@ -18,6 +18,18 @@ locals {
   apigee_name = "${var.apigee_name}-apigee"
 }
 
+provider "google" {
+  project = var.project_id
+  region  = var.region
+  zone    = var.main_zone
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+  zone    = var.main_zone
+}
+
 resource "google_project_service_identity" "apigee_sa" {
   provider = google-beta
   project  = var.project_id
@@ -68,17 +80,6 @@ module "apigee_networks" {
 
 }
 
-module "admin" {
-  source = "../../vms/vm-admin"
-
-  project_id      = var.project_id
-  region          = var.region
-  zone            = var.main_zone
-  prefix_name     = local.apigee_name
-  network_name    = module.apigee_networks.network.name
-  subnetwork_name = module.apigee_networks.subnetwork.name
-}
-
 module "apigee_organization" {
   source             = "./organization"
   project_id         = var.project_id
@@ -95,17 +96,28 @@ module "apigee_organization" {
   ]
 }
 
-# module "apigee_x_instance" {
-#   for_each            = var.apigee_instances
-#   source              = "./instance"
-#   apigee_org_id       = module.apigee_organization.org_id
-#   name                = each.value.name
-#   region              = each.value.region
-#   #ip_range            = each.value.ip_range
-#   apigee_environments = each.value.environments
-#   #disk_encryption_key = module.kms-inst-disk[each.key].key_ids["inst-disk"]
-#   depends_on = [
-#     google_project_service_identity.apigee_sa#,
-#     #module.kms-inst-disk.self_link
-#   ]
-# }
+module "apigee_x_instance" {
+  for_each            = var.apigee_instances
+  source              = "./instance"
+  apigee_org_id       = module.apigee_organization.org_id
+  name                = each.value.name
+  region              = each.value.region
+  #ip_range            = each.value.ip_range
+  apigee_environments = each.value.environments
+  #disk_encryption_key = module.kms-inst-disk[each.key].key_ids["inst-disk"]
+  depends_on = [
+    google_project_service_identity.apigee_sa#,
+    #module.kms-inst-disk.self_link
+  ]
+}
+
+module "admin" {
+  source = "../../vms/vm-admin"
+
+  project_id      = var.project_id
+  region          = var.region
+  zone            = var.main_zone
+  prefix_name     = local.apigee_name
+  network_name    = module.apigee_networks.network.name
+  subnetwork_name = module.apigee_networks.subnetwork.name
+}

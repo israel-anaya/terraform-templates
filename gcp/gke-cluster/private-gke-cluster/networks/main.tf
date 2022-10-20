@@ -19,12 +19,12 @@ resource "google_compute_subnetwork" "subnetwork" {
 
   secondary_ip_range {
     range_name    = format("%s-pod-range", var.cluster_name)
-    ip_cidr_range = "10.203.0.0/16"
+    ip_cidr_range = "10.203.0.0/20"
   }
 
   secondary_ip_range {
     range_name    = format("%s-svc-range", var.cluster_name)
-    ip_cidr_range = "10.204.0.0/20"
+    ip_cidr_range = "10.204.0.0/22"
   }
 }
 
