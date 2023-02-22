@@ -1,5 +1,5 @@
 locals {
-  cluster_name = var.enable_autopilot ? "${var.instance_name}-gke-ap" : "${var.instance_name}-gke"
+  cluster_name = var.enable_autopilot ? "${var.instance_name}-gkeap" : "${var.instance_name}-gke"
 }
 
 provider "google" {

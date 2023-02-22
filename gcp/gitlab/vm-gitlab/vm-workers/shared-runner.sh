@@ -1,6 +1,8 @@
 #! /bin/sh
 RUNNER_BASE_NAME="shared-gitlab-runner"
-REGISTRATION_TOKEN="qTxnRSCCbhX6KwopzvYJ"
+GITLAB_HOST="gitlab.cehd.devopsat.dev"
+REGISTRATION_TOKEN=""
+REGISTRATION_URL="https://$GITLAB_HOST/"
 
 validateRunnerName() {
     if [ -z $1 ] ; then
@@ -27,6 +29,7 @@ createSharedRunner() {
         docker run -d --name $RUNNER_NAME --restart always \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v $RUNNER_NAME:/etc/gitlab-runner \
+            -v /home/workers/$GITLAB_HOST.crt:/etc/gitlab-runner/certs/$GITLAB_HOST.crt:ro \
             gitlab/gitlab-runner:latest
     fi
 }
@@ -85,7 +88,7 @@ registerSharedRunner() {
             gitlab/gitlab-runner:latest register \
             --template-config /tmp/docker-template-config.toml \
             --non-interactive \
-            --url "https://gitlab.cehd.devopsat.dev/" \
+            --url $REGISTRATION_URL \
             --registration-token $REGISTRATION_TOKEN \
             --name $RUNNER_NAME
 

@@ -10,10 +10,10 @@
   [runners.docker]
     tls_verify = false
     image = "docker:stable"
-    privileged = false
+    privileged = true
     disable_entrypoint_overwrite = false
     oom_kill_disable = false
     disable_cache = false
-    volumes = ["/gitlab/builds:/builds", "/gitlab/cache:/cache"]
+    volumes = ["/gitlab/builds:/builds", "/gitlab/cache:/cache", "/var/run/docker.sock:/var/run/docker.sock"]
     shm_size = 0
     wait_for_services_timeout = 90
