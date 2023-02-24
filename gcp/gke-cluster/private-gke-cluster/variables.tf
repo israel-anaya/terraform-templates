@@ -18,7 +18,7 @@ variable "main_zone" {
   description = "The zone primary to use"
 }
 
-variable "cluster_node_zones" {
+variable "node_zones" {
   type        = list(string)
   description = "The zones where Kubernetes cluster worker nodes should be located"
 }

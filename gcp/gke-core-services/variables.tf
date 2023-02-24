@@ -8,7 +8,13 @@ variable "region" {
   description = "The region to use"
 }
 
+variable "cluster_instance_name" {
+  type        = string
+  description = "Cluster instance name"
+}
+
 variable "cluster_environments" {
+  type        = list(string)
   description = "List of Environment Names."
 }
 
@@ -31,10 +37,4 @@ variable "gitlab_agent_kasAddress" {
 }
 
 variable "cert_manager_imagetag" {
-}
-
-variable "cluster_issuer_server" {
-}
-
-variable "cluster_issuer_email" {
 }

@@ -35,7 +35,7 @@ module "gke_cluster" {
   project_id                 = var.project_id
   region                     = var.region
   service_account            = module.gke_service_account.email
-  node_zones                 = var.cluster_node_zones
+  node_zones                 = var.node_zones
   cluster_name               = local.cluster_name
   machine_type               = var.machine_type
   node_count                 = var.node_count
@@ -53,7 +53,7 @@ module "gke_cluster_autopilot" {
   project_id                 = var.project_id
   region                     = var.region
   service_account            = module.gke_service_account.email
-  node_zones                 = var.cluster_node_zones
+  node_zones                 = var.node_zones
   cluster_name               = local.cluster_name
   machine_type               = var.machine_type
   node_count                 = var.node_count

@@ -13,7 +13,7 @@ resource "google_compute_firewall" "master_webhooks" {
 
   source_ranges = [google_container_cluster.primary.private_cluster_config.0.master_ipv4_cidr_block]
   source_tags   = []
-  target_tags   = ["${var.cluster_name}-node"]
+  #target_tags   = ["${var.cluster_name}-node"]
 
   allow {
     protocol = "tcp"
