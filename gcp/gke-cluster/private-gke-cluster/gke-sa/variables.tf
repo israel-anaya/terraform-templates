@@ -23,7 +23,7 @@ variable "service_account_iam_roles" {
 
 variable "service_account_custom_iam_roles" {
   type    = list(string)
-  default = []
+  default = ["roles/container.nodeServiceAccount"]
 
   description = <<-EOF
   List of arbitrary additional IAM roles to attach to the service account on
