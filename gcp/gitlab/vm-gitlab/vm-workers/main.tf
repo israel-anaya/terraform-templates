@@ -45,12 +45,17 @@ data "template_file" "shared_runner" {
   template = file("${path.module}/shared-runner.sh")
 }
 
+data "template_file" "runner_config" {
+  template = file("${path.module}/docker-template-config.toml")
+}
+
 data "template_file" "startup_script" {
   template = file("${path.module}/startup-script.sh")
 
   vars = {
     PROXY_SQL     = data.template_file.proxy_sql.rendered
     SHARED_RUNNER = data.template_file.shared_runner.rendered
+    RUNNER_CONFIG = data.template_file.runner_config.rendered
   }
 }
 

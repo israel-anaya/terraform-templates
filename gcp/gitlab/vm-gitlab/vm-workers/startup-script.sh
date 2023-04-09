@@ -33,6 +33,10 @@ cat <<"EOF" > /home/workers/shared-runner.sh
 ${SHARED_RUNNER}
 EOF
 
+cat <<"EOF" > /home/workers/docker-template-config.toml
+${RUNNER_CONFIG}
+EOF
+
 sudo chmod +x /home/workers/proxy-sql.sh
 
 sudo chmod +x /home/workers/shared-runner.sh

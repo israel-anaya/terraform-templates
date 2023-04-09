@@ -69,6 +69,7 @@ data "template_file" "startup_script" {
   sudo apt-get update -y
   sudo apt-get install -y curl wget openssh-server ca-certificates
   curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+  
   EOF
 }
 

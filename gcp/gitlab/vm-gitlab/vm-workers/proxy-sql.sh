@@ -1,4 +1,7 @@
 #! /bin/sh
+# More info
+# https://cloud.google.com/sql/docs/sqlserver/connect-auth-proxy?hl=es-419#tcp-sockets
+
 export SQL_CLOUD_INSTANCE=${connection_name}
 CONTAINER_NAME="proxy-sql"
 
