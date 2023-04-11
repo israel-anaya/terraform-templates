@@ -328,10 +328,17 @@ controller:
     configUrls: []
     # - https://acme.org/jenkins.yaml
     # Remote URL:s for configuration files.
-    configScripts: {}
-    #  welcome-message: |
-    #    jenkins:
-    #      systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Plataforma de DevOps
+          globalNodeProperties:
+          - envVars:
+              env:
+              - key: MAVEN_REPOSITORY
+                value: /cache/.m2/
+              - key: VARIABLE2
+                value: bar
     # Allows adding to the top-level security JCasC section. For legacy,  default the chart includes apiToken configurations
     security:
       apiToken:
@@ -734,7 +741,7 @@ agent:
   # Max number of spawned agent
   containerCap: 10
   # Pod name
-  podName: "default"
+  podName: "jenkins-slave"
   # Allows the Pod to remain active for reuse until the configured number of
   # minutes has passed since the last step was executed on it.
   idleMinutes: 0
@@ -776,7 +783,7 @@ agent:
 
   # Disable the default Jenkins Agent configuration.
   # Useful when configuring agents only with the podTemplates value, since the default podTemplate populated by values mentioned above will be excluded in the rendered template.
-  disableDefaultAgent: false
+  disableDefaultAgent: true
 
   # Below is the implementation of custom pod templates for the default configured kubernetes cloud.
   # Add a key under podTemplates for each pod template. Each key (prior to | character) is just a label, and can be any value.
@@ -804,12 +811,12 @@ agent:
 
 # Here you can add additional agents
 # They inherit all values from `agent` so you only need to specify values which differ
-additionalAgents: {}
+additionalAgents:
 #  maven:
 #    podName: maven
 #    customJenkinsLabels: maven
 #    # An example of overriding the jnlp container
-#    # sideContainerName: jnlp
+#    sideContainerName: jnlp
 #    image: jenkins/jnlp-agent-maven
 #    tag: latest
 #  python:
