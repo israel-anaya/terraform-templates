@@ -28,22 +28,22 @@ module "nginx_controller" {
   depends_on   = [module.cert_manager]
 }
 
-module "secure_store" {
-  source = "./vault"
+# module "secure_store" {
+#   source = "./vault"
 
-  imagetag                   = ""
-  namespace                  = var.namespace
-  cluster_type               = var.cluster_type
-  cluster_instance_name      = var.cluster_instance_name
-  cluster_environments       = var.cluster_environments
-  cluster_dns_name           = var.cluster_dns_name
-  cluster_service_account_id = var.cluster_vault_service_account_name
+#   imagetag                   = ""
+#   namespace                  = var.namespace
+#   cluster_type               = var.cluster_type
+#   cluster_instance_name      = var.cluster_instance_name
+#   cluster_environments       = var.cluster_environments
+#   cluster_dns_name           = var.cluster_dns_name
+#   cluster_service_account_id = var.cluster_vault_service_account_name
 
-  depends_on = [
-    module.cert_manager,
-    module.nginx_controller
-  ]
-}
+#   depends_on = [
+#     module.cert_manager,
+#     module.nginx_controller
+#   ]
+# }
 
 
 
