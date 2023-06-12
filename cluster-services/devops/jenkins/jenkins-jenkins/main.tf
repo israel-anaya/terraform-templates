@@ -15,23 +15,23 @@ resource "helm_release" "jenkins" {
     "${file("${path.module}/values.yaml")}"             
   ]
 
-  set {
-     name  = "controller.jenkinsUrl"
-     value = var.dns_name
-  }  
+  #set {
+  #   name  = "controller.jenkinsUrl"
+  #   value = var.dns_name
+  #}  
 
   set {
-     name  = "ingress.hostname"
+     name  = "controller.ingress.hostName"
      value = var.dns_name
   }
 
   set {
-     name  = "ingress.tls[0].secretName"
+     name  = "controller.ingress.tls[0].secretName"
      value = local.secret_name
   }
 
   set {
-     name  = "ingress.tls[0].hosts[0]"
+     name  = "controller.ingress.tls[0].hosts[0]"
      value = var.dns_name
   }
 
